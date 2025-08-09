@@ -846,6 +846,69 @@ void addClient(vector <stClient>& vClient, vector <stUser>& vUser)
 	startProgram(vUser);
 }
 
+void addUserScreen(vector <stUser>& vUser)
+{
+	string username, password;
+	short permission;
+	cout << "\n-----------------------------------";
+	cout << "\n\tAdd New User Screen";
+	cout << "\n-----------------------------------\n";
+
+	char moreUsers = 'n';
+	do
+	{
+		bool found = false;
+		cout << "\nAdding New User:\n";
+		cout << "\nEnter Username: ";
+		getline(cin >> ws, username);
+
+		cout << "\nEnter Password: ";
+		cin >> password;
+
+		char fullAccess = 'n';
+		cout << "\n\nDo you want to give full access? y/n: ";
+		cin >> fullAccess;
+
+		if (tolower(fullAccess) == 'y')
+		{
+			permission = -1;
+		}
+
+		for (short i = 0; i < vUser.size(); i++)
+		{
+			if (vUser[i].username == username)
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (found)
+		{
+			do
+			{
+				found = false;
+				cout << "\nUser with [" << username << "] already exists, Enter another username: ";
+				getline(cin >> ws, username);
+				cout << "\nEnter password: ";
+				cin >> password;
+
+				for (short i = 0; i < vUser.size(); i++)
+				{
+					if (vUser[i].username == username)
+					{
+						found = true;
+						break;
+					}
+				}
+			} while (found);
+		}
+		cout << "\n\nUser Added Successfully, do you want to add more users? y/n: ";
+		cin >> moreUsers;
+
+	} while (tolower(moreUsers) == 'y');
+}
+
 void backToLoginScreen()
 {
 	system("cls");
@@ -913,6 +976,22 @@ void selectManageChoice(enManageMenu choice, vector <stUser>& vUser)
 	{
 	case listUsers:
 		printListUsers(vUser);
+		break;
+
+	case addUser:
+		addUserScreen(vUser);
+		break;
+
+	case deleteUser:
+		//add func
+		break;
+
+	case updateUser:
+		// add func
+		break;
+
+	case findUser:
+		// add func
 		break;
 
 	default:
