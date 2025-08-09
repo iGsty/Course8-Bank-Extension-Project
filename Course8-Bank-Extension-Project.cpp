@@ -70,6 +70,8 @@ void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser);
 void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser);
 void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser);
 void loginScreen();
+void selectManageChoice(enManageMenu choice, vector <stUser>& vUser);
+
 
 string readAccountNumber()
 {
@@ -95,6 +97,23 @@ enMainMenu readUserChoice()
 	} while (num < 1 || num > 8);
 
 	return enMainMenu(num);
+}
+
+enManageMenu readManageChoice()
+{
+	short num;
+	cout << "Choose What Do You Want to Do? [1 to 6]? ";
+	do
+	{
+		cin >> ws >> num;
+		if (num < 1 || num > 6)
+		{
+			cout << "\nSorry wrong input please enter a number between 1 to 6: ";
+		}
+
+	} while (num < 1 || num > 6);
+
+	return enManageMenu(num);
 }
 
 enTransactionMenu readTransactionChoice()
@@ -155,6 +174,7 @@ stUser assignUsersData(const vector <string>& vString)
 
 	user.username = vString[0];
 	user.password = vString[1];
+	user.permission = stoi(vString[2]);
 	return user;
 }
 
@@ -169,6 +189,17 @@ string convertDataToLine(stClient client)
 	line += to_string(client.accountBalance);
 
 	return line;
+}
+
+string convertUserToLine(stUser user)
+{
+	string word = "";
+
+	word += user.username + delim
+		+ user.password + delim
+		+ to_string(user.permission);
+
+	return word;
 }
 
 vector <stClient> readClientsInFile()
@@ -692,9 +723,21 @@ void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser) //declared
 	printTransactionsScreen(vClient, vUser);
 }
 
-void manageUsersScreen(vector <stUser> vUser)
+void printManageScreen(vector <stUser> vUser)
 {
-
+	cout << "\n===========================================\n";
+	cout << "\tManage Users Screen";
+	cout << "\n===========================================\n";
+	cout << "\t[1] List Users";
+	cout << "\n\t[2] Add New User";
+	cout << "\n\t[3] Delete User";
+	cout << "\n\t[4] Update User";
+	cout << "\n\t[5] Find User";
+	cout << "\n\t[6] Main Menu";
+	cout << "\n===========================================\n";
+	enManageMenu choice = readManageChoice();
+	system("cls");
+	selectManageChoice(choice, vUser);
 }
 
 void printMainMenu()
@@ -733,6 +776,25 @@ void printClientList(const vector <stClient>& vClient, vector <stUser>& vUser)
 	system("cls");
 	startProgram(vUser);
 
+}
+
+void printListUsers(vector <stUser>& vUser)
+{
+	short usersNumber = vUser.size();
+
+	cout << "\n\t\t\t Users List (" << usersNumber << ") User(s).\n";
+	cout << "\n______________________________________________________________________\n";
+	cout << "\n| User Name\t | Password\t| Permissions\t\t";
+	cout << "\n______________________________________________________________________\n";
+	for (short i = 0; i < usersNumber; i++)
+	{
+		cout << "\n| " << vUser[i].username << "\t\t | " << vUser[i].password << "\t\t| " << to_string(vUser[i].permission);
+	}
+	cout << "\n______________________________________________________________________\n";
+	cout << "\n\nPress any key to go back to manage users menu...";
+	system("pause>0");
+	system("cls");
+	printManageScreen(vUser);
 }
 
 void addClient(vector <stClient>& vClient, vector <stUser>& vUser)
@@ -845,6 +907,20 @@ void loginScreen() //declared above
 	}
 }
 
+void selectManageChoice(enManageMenu choice, vector <stUser>& vUser)
+{
+	switch (choice)
+	{
+	case listUsers:
+		printListUsers(vUser);
+		break;
+
+	default:
+		startProgram(vUser);
+		break;
+	}
+}
+
 void selectUserChoice(enMainMenu choice, vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	switch (choice)
@@ -874,7 +950,7 @@ void selectUserChoice(enMainMenu choice, vector <stClient>& vClient, vector <stU
 		break;
 
 	case manageUsers:
-		//add function;
+		printManageScreen(vUser);
 		break;
 
 	default:
