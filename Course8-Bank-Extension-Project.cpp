@@ -20,16 +20,18 @@ struct stClient
 struct stUser
 {
 	string username, password;
-	short permission;
+	short permission = 0;
 };
 
-struct sPermission
+struct stPermission
 {
-	short listUsers = 1;	// 0.0.0.0.1
-	short addUser = 2;		// 0.0.0.1.0  
-	short deleteUser = 4;	// 0.0.1.0.0
-	short updateUser = 8;	// 0.1.0.0.0
-	short findUser = 16;	// 1.0.0.0.0
+	short listClients = 1;			// 0.0.0.0.0.0.1
+	short addClient = 2;			// 0.0.0.0.0.1.0  
+	short deleteClient = 4;			// 0.0.0.0.1.0.0
+	short updateClient = 8;			// 0.0.0.1.0.0.0
+	short findClient = 16;			// 0.0.1.0.0.0.0
+	short doTransactions = 32;		// 0.1.0.0.0.0.0
+	short accessManageUsers = 64;	// 1.0.0.0.0.0.0
 
 };
 
@@ -241,7 +243,7 @@ vector <stUser> readUsersInFIle()
 	{
 		string line;
 
-		while (getline(myFile, line));
+		while (getline(myFile, line))
 		{
 			vS1 = splitString(line);
 			user = assignUsersData(vS1);
@@ -277,6 +279,26 @@ void writeClientsInFile(vector <stClient>& vClient)
 	}
 }
 
+void writeUsersInFile(vector <stUser>& vUser)
+{
+	fstream myFile;
+
+	myFile.open(usersFilePath, ios::out);
+
+	if (myFile.is_open())
+	{
+		string line;
+
+		for (stUser& u : vUser)
+		{
+			line = convertUserToLine(u);
+			myFile << line << endl;
+		}
+
+		myFile.close();
+	}
+}
+
 stClient getClient(vector <stClient>& vClient, string accountNum)
 {
 	stClient client;
@@ -295,6 +317,18 @@ bool FoundClient(vector <stClient>& vClient, string accountNum)
 	for (stClient& c : vClient)
 	{
 		if (c.accountNumber == accountNum)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool FoundUser(vector <stUser>& vUser, string username)
+{
+	for (stUser& u : vUser)
+	{
+		if (u.username == username)
 		{
 			return true;
 		}
@@ -848,8 +882,9 @@ void addClient(vector <stClient>& vClient, vector <stUser>& vUser)
 
 void addUserScreen(vector <stUser>& vUser)
 {
-	string username, password;
-	short permission;
+	stUser user;
+	stPermission perm;
+
 	cout << "\n-----------------------------------";
 	cout << "\n\tAdd New User Screen";
 	cout << "\n-----------------------------------\n";
@@ -860,10 +895,16 @@ void addUserScreen(vector <stUser>& vUser)
 		bool found = false;
 		cout << "\nAdding New User:\n";
 		cout << "\nEnter Username: ";
-		getline(cin >> ws, username);
+		getline(cin >> ws, user.username);
+
+		while (FoundUser(vUser, user.username))
+		{
+			cout << "\nUser with [" << user.username << "] already exists, Enter another username: ";
+			getline(cin >> ws, user.username);
+		}
 
 		cout << "\nEnter Password: ";
-		cin >> password;
+		cin >> user.password;
 
 		char fullAccess = 'n';
 		cout << "\n\nDo you want to give full access? y/n: ";
@@ -871,42 +912,80 @@ void addUserScreen(vector <stUser>& vUser)
 
 		if (tolower(fullAccess) == 'y')
 		{
-			permission = -1;
+			user.permission = -1;
 		}
-
-		for (short i = 0; i < vUser.size(); i++)
+		else
 		{
-			if (vUser[i].username == username)
-			{
-				found = true;
-				break;
-			}
+			cout << "\n\nDo you want to give access to: ";
+
+			char clintListPermission = 'n';
+			cout << "\n\nShow Client List? y/n: ";
+			cin >> ws >> clintListPermission;
+
+			if (tolower(clintListPermission) == 'y')
+				user.permission = (user.permission | perm.listClients);
+
+			//---------------------------------------
+			char addClientPermission = 'n';
+			cout << "\n\nAdd New Client? y/n: ";
+			cin >> addClientPermission;
+
+			if (tolower(addClientPermission) == 'y')
+				user.permission = (user.permission | perm.addClient);
+
+			//---------------------------------------
+			char deleteClientPermission = 'n';
+			cout << "\n\nDelete Clients? y/n: ";
+			cin >> deleteClientPermission;
+
+			if (tolower(deleteClientPermission) == 'y')
+				user.permission = (user.permission | perm.deleteClient);
+
+			//---------------------------------------
+			char updateClientPermission = 'n';
+			cout << "\n\nUpdate Clients? y/n: ";
+			cin >> updateClientPermission;
+
+			if (tolower(updateClientPermission) == 'y')
+				user.permission = (user.permission | perm.updateClient);
+
+			//---------------------------------------
+			char findClientPermission = 'n';
+			cout << "\n\nFind Client? y/n: ";
+			cin >> findClientPermission;
+
+			if (tolower(findClientPermission) == 'y')
+				user.permission = (user.permission | perm.findClient);
+
+			//---------------------------------------
+			char transactionsPermission = 'n';
+			cout << "\n\nTransactions? y/n: ";
+			cin >> transactionsPermission;
+
+			if (tolower(transactionsPermission) == 'y')
+				user.permission = (user.permission | perm.doTransactions);
+
+			//---------------------------------------
+			char manageUsersPermission = 'n';
+			cout << "\n\nManage Users? y/n: ";
+			cin >> manageUsersPermission;
+
+			if (tolower(manageUsersPermission) == 'y')
+				user.permission = (user.permission | perm.accessManageUsers);
+
 		}
 
-		if (found)
-		{
-			do
-			{
-				found = false;
-				cout << "\nUser with [" << username << "] already exists, Enter another username: ";
-				getline(cin >> ws, username);
-				cout << "\nEnter password: ";
-				cin >> password;
-
-				for (short i = 0; i < vUser.size(); i++)
-				{
-					if (vUser[i].username == username)
-					{
-						found = true;
-						break;
-					}
-				}
-			} while (found);
-		}
+		vUser.push_back(user);
+		writeUsersInFile(vUser);
 		cout << "\n\nUser Added Successfully, do you want to add more users? y/n: ";
 		cin >> moreUsers;
 
 	} while (tolower(moreUsers) == 'y');
+
+	cout << "\n\nPress any key to go back to manage users menu...";
+	system("pause>0");
+	system("cls");
+	printManageScreen(vUser);
 }
 
 void backToLoginScreen()
