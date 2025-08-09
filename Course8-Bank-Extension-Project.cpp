@@ -340,66 +340,82 @@ void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser, short p
 {
 	string accountNum;
 	stClient client;
+	stPermission perm;
 
 	short clientNumber = vClient.size();
 
-	cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	for (short i = 0; i < clientNumber; i++)
+	if ((permission & perm.deleteClient) == perm.deleteClient)
 	{
-		cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
-	}
-	cout << "\n___________________________________________________________________________________________\n";
-
-
-	cout << "\n-----------------------------------";
-	cout << "\n\tDelete Client Screen";
-	cout << "\n-----------------------------------\n";
-
-	accountNum = readAccountNumber();
-
-	while (!FoundClient(vClient, accountNum))
-	{
-		cout << "\nClient with [" << accountNum << "] Not Found! , Enter another Account Number: ";
-		cin >> accountNum;
-	}
-
-	client = getClient(vClient, accountNum);
-	cout << "\nThe following are the client details:";
-	cout << "\n-----------------------------------\n";
-
-	cout << left << setw(19) << "\nAccount Number" << right << ": " << client.accountNumber;
-	cout << left << setw(19) << "\nPin Code" << right << ": " << client.pinCode;
-	cout << left << setw(19) << "\nClient Name" << right << ": " << client.name;
-	cout << left << setw(19) << "\nPhone" << right << ": " << client.phone;
-	cout << left << setw(19) << "\nAccount Balance" << right << ": " << fixed << client.accountBalance << endl;
-	cout << "\n-----------------------------------\n";
-
-
-	char deleteAcc = 'n';
-	cout << "\n\nAre you sure you want to delete this client y/n: ";
-	cin >> deleteAcc;
-
-	if (tolower(deleteAcc) == 'y')
-	{
-		for (stClient& c : vClient)
+		cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		for (short i = 0; i < clientNumber; i++)
 		{
-			if (c.accountNumber == accountNum)
-			{
-				c.markForDelete = true;
-			}
+			cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
 		}
-		writeClientsInFile(vClient);
-		cout << "\n\nClient deleted successfuly.";
-		cout << "\n\nPress any key to go back to main menu...";
-		system("pause>0");
-		system("cls");
-		startProgram(vUser, permission);
+		cout << "\n___________________________________________________________________________________________\n";
+
+
+		cout << "\n-----------------------------------";
+		cout << "\n\tDelete Client Screen";
+		cout << "\n-----------------------------------\n";
+
+		accountNum = readAccountNumber();
+
+		while (!FoundClient(vClient, accountNum))
+		{
+			cout << "\nClient with [" << accountNum << "] Not Found! , Enter another Account Number: ";
+			cin >> accountNum;
+		}
+
+		client = getClient(vClient, accountNum);
+		cout << "\nThe following are the client details:";
+		cout << "\n-----------------------------------\n";
+
+		cout << left << setw(19) << "\nAccount Number" << right << ": " << client.accountNumber;
+		cout << left << setw(19) << "\nPin Code" << right << ": " << client.pinCode;
+		cout << left << setw(19) << "\nClient Name" << right << ": " << client.name;
+		cout << left << setw(19) << "\nPhone" << right << ": " << client.phone;
+		cout << left << setw(19) << "\nAccount Balance" << right << ": " << fixed << client.accountBalance << endl;
+		cout << "\n-----------------------------------\n";
+
+
+		char deleteAcc = 'n';
+		cout << "\n\nAre you sure you want to delete this client y/n: ";
+		cin >> deleteAcc;
+
+		if (tolower(deleteAcc) == 'y')
+		{
+			for (stClient& c : vClient)
+			{
+				if (c.accountNumber == accountNum)
+				{
+					c.markForDelete = true;
+				}
+			}
+			writeClientsInFile(vClient);
+			cout << "\n\nClient deleted successfuly.";
+			cout << "\n\nPress any key to go back to main menu...";
+			system("pause>0");
+			system("cls");
+			startProgram(vUser, permission);
+		}
+		else
+		{
+			cout << "\n\nPress any key to go back to main menu...";
+			system("pause>0");
+			system("cls");
+			startProgram(vUser, permission);
+		}
 	}
 	else
 	{
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
@@ -411,116 +427,43 @@ void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser, short 
 {
 	string accountNum;
 	stClient client;
+	stPermission perm;
 
 	short clientNumber = vClient.size();
 
-	cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	for (short i = 0; i < clientNumber; i++)
+	if ((permission & perm.findClient) == perm.findClient)
 	{
-		cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
-	}
-	cout << "\n___________________________________________________________________________________________\n";
-
-	cout << "\n-----------------------------------";
-	cout << "\n\tFind Client Screen";
-	cout << "\n-----------------------------------\n";
-	accountNum = readAccountNumber();
-
-	while (!FoundClient(vClient, accountNum))
-	{
-		cout << "\nClient with [" << accountNum << "] Not Found! , Enter another Account Number: ";
-		cin >> accountNum;
-	}
-
-	client = getClient(vClient, accountNum);
-	cout << "\nThe following are the client details:";
-	cout << "\n-----------------------------------\n";
-
-	cout << left << setw(19) << "\nAccount Number" << right << ": " << client.accountNumber;
-	cout << left << setw(19) << "\nPin Code" << right << ": " << client.pinCode;
-	cout << left << setw(19) << "\nClient Name" << right << ": " << client.name;
-	cout << left << setw(19) << "\nPhone" << right << ": " << client.phone;
-	cout << left << setw(19) << "\nAccount Balance" << right << ": " << fixed << client.accountBalance << endl;
-	cout << "\n-----------------------------------\n";
-	cout << "\n\nPress any key to go back to main menu...";
-	system("pause>0");
-	system("cls");
-	startProgram(vUser, permission);
-}
-
-void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
-{
-	string accountNum;
-	stClient client;
-
-	short clientNumber = vClient.size();
-
-	cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	for (short i = 0; i < clientNumber; i++)
-	{
-		cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
-	}
-	cout << "\n___________________________________________________________________________________________\n";
-
-
-	cout << "\n-----------------------------------";
-	cout << "\n    Update Client Info Screen";
-	cout << "\n-----------------------------------\n";
-
-	accountNum = readAccountNumber();
-
-	while (!FoundClient(vClient, accountNum))
-	{
-		cout << "\nClient with [" << accountNum << "] Not Found! , Enter another Account Number: ";
-		cin >> accountNum;
-	}
-
-	client = getClient(vClient, accountNum);
-	cout << "\nThe following are the client details:";
-	cout << "\n-----------------------------------\n";
-
-	cout << left << setw(19) << "\nAccount Number" << right << ": " << client.accountNumber;
-	cout << left << setw(19) << "\nPin Code" << right << ": " << client.pinCode;
-	cout << left << setw(19) << "\nClient Name" << right << ": " << client.name;
-	cout << left << setw(19) << "\nPhone" << right << ": " << client.phone;
-	cout << left << setw(19) << "\nAccount Balance" << right << ": " << fixed << client.accountBalance << endl;
-	cout << "\n-----------------------------------\n";
-
-	char updateAcc = 'n';
-	cout << "\n\nAre you sure you want to update this client y/n: ";
-	cin >> updateAcc;
-
-	if (tolower(updateAcc) == 'y')
-	{
-		for (stClient& c : vClient)
+		cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		for (short i = 0; i < clientNumber; i++)
 		{
-			if (c.accountNumber == accountNum)
-			{
-				cout << "\nEnter Pin Code: ";
-				getline(cin >> ws, c.pinCode);
+			cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
+		}
+		cout << "\n___________________________________________________________________________________________\n";
 
-				cout << "Enter Name: ";
-				getline(cin, c.name);
+		cout << "\n-----------------------------------";
+		cout << "\n\tFind Client Screen";
+		cout << "\n-----------------------------------\n";
+		accountNum = readAccountNumber();
 
-				cout << "Enter Phone: ";
-				getline(cin, c.phone);
-
-				cout << "Enter Account Balance: ";
-				cin >> ws >> c.accountBalance;
-
-				break;
-			}
+		while (!FoundClient(vClient, accountNum))
+		{
+			cout << "\nClient with [" << accountNum << "] Not Found! , Enter another Account Number: ";
+			cin >> accountNum;
 		}
 
-		writeClientsInFile(vClient);
-		cout << "\n\nClient Updated Successfuly.";
+		client = getClient(vClient, accountNum);
+		cout << "\nThe following are the client details:";
+		cout << "\n-----------------------------------\n";
 
+		cout << left << setw(19) << "\nAccount Number" << right << ": " << client.accountNumber;
+		cout << left << setw(19) << "\nPin Code" << right << ": " << client.pinCode;
+		cout << left << setw(19) << "\nClient Name" << right << ": " << client.name;
+		cout << left << setw(19) << "\nPhone" << right << ": " << client.phone;
+		cout << left << setw(19) << "\nAccount Balance" << right << ": " << fixed << client.accountBalance << endl;
+		cout << "\n-----------------------------------\n";
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
@@ -528,6 +471,111 @@ void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser, short 
 	}
 	else
 	{
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
+		cout << "\n\nPress any key to go back to main menu...";
+		system("pause>0");
+		system("cls");
+		startProgram(vUser, permission);
+	}
+}
+
+void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
+{
+	string accountNum;
+	stClient client;
+	stPermission perm;
+
+	if ((permission & perm.updateClient) == perm.updateClient)
+	{
+		short clientNumber = vClient.size();
+
+		cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		for (short i = 0; i < clientNumber; i++)
+		{
+			cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
+		}
+		cout << "\n___________________________________________________________________________________________\n";
+
+
+		cout << "\n-----------------------------------";
+		cout << "\n    Update Client Info Screen";
+		cout << "\n-----------------------------------\n";
+
+		accountNum = readAccountNumber();
+
+		while (!FoundClient(vClient, accountNum))
+		{
+			cout << "\nClient with [" << accountNum << "] Not Found! , Enter another Account Number: ";
+			cin >> accountNum;
+		}
+
+		client = getClient(vClient, accountNum);
+		cout << "\nThe following are the client details:";
+		cout << "\n-----------------------------------\n";
+
+		cout << left << setw(19) << "\nAccount Number" << right << ": " << client.accountNumber;
+		cout << left << setw(19) << "\nPin Code" << right << ": " << client.pinCode;
+		cout << left << setw(19) << "\nClient Name" << right << ": " << client.name;
+		cout << left << setw(19) << "\nPhone" << right << ": " << client.phone;
+		cout << left << setw(19) << "\nAccount Balance" << right << ": " << fixed << client.accountBalance << endl;
+		cout << "\n-----------------------------------\n";
+
+		char updateAcc = 'n';
+		cout << "\n\nAre you sure you want to update this client y/n: ";
+		cin >> updateAcc;
+
+		if (tolower(updateAcc) == 'y')
+		{
+			for (stClient& c : vClient)
+			{
+				if (c.accountNumber == accountNum)
+				{
+					cout << "\nEnter Pin Code: ";
+					getline(cin >> ws, c.pinCode);
+
+					cout << "Enter Name: ";
+					getline(cin, c.name);
+
+					cout << "Enter Phone: ";
+					getline(cin, c.phone);
+
+					cout << "Enter Account Balance: ";
+					cin >> ws >> c.accountBalance;
+
+					break;
+				}
+			}
+
+			writeClientsInFile(vClient);
+			cout << "\n\nClient Updated Successfuly.";
+
+			cout << "\n\nPress any key to go back to main menu...";
+			system("pause>0");
+			system("cls");
+			startProgram(vUser, permission);
+		}
+		else
+		{
+			cout << "\n\nPress any key to go back to main menu...";
+			system("pause>0");
+			system("cls");
+			startProgram(vUser, permission);
+		}
+	}
+	else
+	{
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
@@ -539,18 +587,34 @@ void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser, short 
 void printTransactionsScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	enTransactionMenu menuChoice;
+	stPermission perm;
 
-	cout << "\n===========================================\n";
-	cout << "\t\tTransactions Menu Screen";
-	cout << "\n===========================================\n";
-	cout << "\t[1] Deposit.";
-	cout << "\n\t[2] Withdraw.";
-	cout << "\n\t[3] Total Balances.";
-	cout << "\n\t[4] Main Menu.";
-	cout << "\n===========================================\n";
+	if((permission & perm.doTransactions) == perm.doTransactions)
+	{
+		cout << "\n===========================================\n";
+		cout << "\t\tTransactions Menu Screen";
+		cout << "\n===========================================\n";
+		cout << "\t[1] Deposit.";
+		cout << "\n\t[2] Withdraw.";
+		cout << "\n\t[3] Total Balances.";
+		cout << "\n\t[4] Main Menu.";
+		cout << "\n===========================================\n";
 
-	menuChoice = readTransactionChoice();
-	selectTransactionMenu(menuChoice, vClient, vUser, permission);
+		menuChoice = readTransactionChoice();
+		selectTransactionMenu(menuChoice, vClient, vUser, permission);
+	}
+	else
+	{
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
+		cout << "\n\nPress any key to go back to main menu...";
+		system("pause>0");
+		system("cls");
+		startProgram(vUser, permission);
+		}
 }
 
 void selectTransactionMenu(enTransactionMenu choice, vector <stClient>& vClient, vector <stUser>& vUser, short permission) //declared above
@@ -759,19 +823,36 @@ void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser, short perm
 
 void printManageScreen(vector <stUser> vUser, short permission)
 {
-	cout << "\n===========================================\n";
-	cout << "\tManage Users Screen";
-	cout << "\n===========================================\n";
-	cout << "\t[1] List Users";
-	cout << "\n\t[2] Add New User";
-	cout << "\n\t[3] Delete User";
-	cout << "\n\t[4] Update User";
-	cout << "\n\t[5] Find User";
-	cout << "\n\t[6] Main Menu";
-	cout << "\n===========================================\n";
-	enManageMenu choice = readManageChoice();
-	system("cls");
-	selectManageChoice(choice, vUser, permission);
+	stPermission perm;
+
+	if ((permission & perm.accessManageUsers) == perm.accessManageUsers)
+	{
+		cout << "\n===========================================\n";
+		cout << "\tManage Users Screen";
+		cout << "\n===========================================\n";
+		cout << "\t[1] List Users";
+		cout << "\n\t[2] Add New User";
+		cout << "\n\t[3] Delete User";
+		cout << "\n\t[4] Update User";
+		cout << "\n\t[5] Find User";
+		cout << "\n\t[6] Main Menu";
+		cout << "\n===========================================\n";
+		enManageMenu choice = readManageChoice();
+		system("cls");
+		selectManageChoice(choice, vUser, permission);
+	}
+	else
+	{
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
+		cout << "\n\nPress any key to go back to main menu...";
+		system("pause>0");
+		system("cls");
+		startProgram(vUser, permission);
+		}
 }
 
 void printMainMenu()
@@ -811,7 +892,11 @@ void printClientList(const vector <stClient>& vClient, vector <stUser>& vUser, s
 	}
 	else
 	{
-		cout << "\n\nAccess Denied";
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
 	}
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
@@ -843,44 +928,56 @@ void addClient(vector <stClient>& vClient, vector <stUser>& vUser, short permiss
 {
 	stClient client;
 	string num;
+	stPermission perm;
 
 	cout << "\n-----------------------------------";
 	cout << "\n\tAdd New Clients Screen";
 	cout << "\n-----------------------------------\n";
 
 	char answer = 'n';
-	do
+	if ((permission & perm.addClient) == perm.addClient)
 	{
-		cout << "\nAdding New Client:\n";
-		num = readAccountNumber();
-
-
-		while (FoundClient(vClient, num))
+		do
 		{
-			cout << "\nClient with [" << num << "] already exists, Enter another Account Number: ";
-			cin >> num;
-		}
+			cout << "\nAdding New Client:\n";
+			num = readAccountNumber();
 
-		client.accountNumber = num;
-		cout << "\nEnter Pin Code: ";
-		getline(cin >> ws, client.pinCode);
 
-		cout << "Enter Name: ";
-		getline(cin, client.name);
+			while (FoundClient(vClient, num))
+			{
+				cout << "\nClient with [" << num << "] already exists, Enter another Account Number: ";
+				cin >> num;
+			}
 
-		cout << "Enter Phone: ";
-		getline(cin, client.phone);
+			client.accountNumber = num;
+			cout << "\nEnter Pin Code: ";
+			getline(cin >> ws, client.pinCode);
 
-		cout << "Enter Account Balance: ";
-		cin >> ws >> client.accountBalance;
+			cout << "Enter Name: ";
+			getline(cin, client.name);
 
-		vClient.push_back(client);
+			cout << "Enter Phone: ";
+			getline(cin, client.phone);
 
-		writeClientsInFile(vClient);
+			cout << "Enter Account Balance: ";
+			cin >> ws >> client.accountBalance;
 
-		cout << "\n\nClient Added Successfuly, do you want to add more y/n: ";
-		cin >> answer;
-	} while (tolower(answer) == 'y');
+			vClient.push_back(client);
+
+			writeClientsInFile(vClient);
+
+			cout << "\n\nClient Added Successfuly, do you want to add more y/n: ";
+			cin >> answer;
+		} while (tolower(answer) == 'y');
+	}
+	else
+	{
+		cout << "\n-----------------------------------";
+		cout << "\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
+	}
 
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
