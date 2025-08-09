@@ -64,11 +64,11 @@ enum enManageMenu
 };
 
 //decalring some functions.
-void startProgram();
-void selectTransactionMenu(enTransactionMenu choice, vector<stClient>& vClient);
-void depositScreen(vector <stClient>& vClient);
-void withdrawScreen(vector <stClient>& vClient);
-void totalBalance(vector <stClient>& vClient);
+void startProgram(vector <stUser>& vUser);
+void selectTransactionMenu(enTransactionMenu choice, vector<stClient>& vClient, vector <stUser>& vUser);
+void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser);
+void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser);
+void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser);
 void loginScreen();
 
 string readAccountNumber()
@@ -271,7 +271,7 @@ bool FoundClient(vector <stClient>& vClient, string accountNum)
 	return false;
 }
 
-void markForDeletion(vector <stClient>& vClient)
+void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	string accountNum;
 	stClient client;
@@ -331,18 +331,18 @@ void markForDeletion(vector <stClient>& vClient)
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram();
+		startProgram(vUser);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram();
+		startProgram(vUser);
 	}
 }
 
-void findClientScreen(vector <stClient>& vClient)
+void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	string accountNum;
 	stClient client;
@@ -383,10 +383,10 @@ void findClientScreen(vector <stClient>& vClient)
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
 	system("cls");
-	startProgram();
+	startProgram(vUser);
 }
 
-void updateClientFunc(vector <stClient>& vClient)
+void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	string accountNum;
 	stClient client;
@@ -459,19 +459,19 @@ void updateClientFunc(vector <stClient>& vClient)
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram();
+		startProgram(vUser);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram();
+		startProgram(vUser);
 	}
 
 }
 
-void printTransactionsScreen(vector <stClient>& vClient)
+void printTransactionsScreen(vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	enTransactionMenu menuChoice;
 
@@ -485,31 +485,31 @@ void printTransactionsScreen(vector <stClient>& vClient)
 	cout << "\n===========================================\n";
 
 	menuChoice = readTransactionChoice();
-	selectTransactionMenu(menuChoice, vClient);
+	selectTransactionMenu(menuChoice, vClient, vUser);
 }
 
-void selectTransactionMenu(enTransactionMenu choice, vector <stClient>& vClient) //declared above
+void selectTransactionMenu(enTransactionMenu choice, vector <stClient>& vClient, vector <stUser>& vUser) //declared above
 {
 	switch (choice)
 	{
 	case deposit:
 		system("cls");
-		depositScreen(vClient);
+		depositScreen(vClient, vUser);
 		break;
 
 	case withdraw:
 		system("cls");
-		withdrawScreen(vClient);
+		withdrawScreen(vClient, vUser);
 		break;
 
 	case totalBalances:
 		system("cls");
-		totalBalance(vClient);
+		totalBalance(vClient, vUser);
 		break;
 
 	default:
 		system("cls");
-		startProgram();
+		startProgram(vUser);
 		break;
 	}
 }
@@ -529,7 +529,7 @@ double calculateTotalBalances(vector <stClient>& vClient)
 	return total;
 }
 
-void depositScreen(vector <stClient>& vClient) //declared above
+void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser) //declared above
 {
 	string accountNum;
 	stClient client;
@@ -583,18 +583,18 @@ void depositScreen(vector <stClient>& vClient) //declared above
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient);
+		printTransactionsScreen(vClient, vUser);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient);
+		printTransactionsScreen(vClient, vUser);
 	}
 }
 
-void withdrawScreen(vector <stClient>& vClient) //declared above
+void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser) //declared above
 {
 	string accountNum;
 	stClient client;
@@ -656,19 +656,19 @@ void withdrawScreen(vector <stClient>& vClient) //declared above
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient);
+		printTransactionsScreen(vClient, vUser);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient);
+		printTransactionsScreen(vClient, vUser);
 	}
 
 }
 
-void totalBalance(vector <stClient>& vClient) //declared above
+void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser) //declared above
 {
 	short clientNumber = vClient.size();
 	double total = calculateTotalBalances(vClient);
@@ -689,7 +689,12 @@ void totalBalance(vector <stClient>& vClient) //declared above
 	cout << "\n\nPress any key to go back to transactions menu...";
 	system("pause>0");
 	system("cls");
-	printTransactionsScreen(vClient);
+	printTransactionsScreen(vClient, vUser);
+}
+
+void manageUsersScreen(vector <stUser> vUser)
+{
+
 }
 
 void printMainMenu()
@@ -710,7 +715,7 @@ void printMainMenu()
 
 }
 
-void printClientList(const vector <stClient>& vClient)
+void printClientList(const vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	short clientNumber = vClient.size();
 
@@ -726,11 +731,11 @@ void printClientList(const vector <stClient>& vClient)
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
 	system("cls");
-	startProgram();
+	startProgram(vUser);
 
 }
 
-void addClient(vector <stClient>& vClient)
+void addClient(vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	stClient client;
 	string num;
@@ -776,7 +781,7 @@ void addClient(vector <stClient>& vClient)
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
 	system("cls");
-	startProgram();
+	startProgram(vUser);
 }
 
 void backToLoginScreen()
@@ -836,36 +841,36 @@ void loginScreen() //declared above
 	if (found)
 	{
 		system("cls");
-		startProgram();
+		startProgram(vUser);
 	}
 }
 
-void selectUserChoice(enMainMenu choice, vector <stClient>& vClient)
+void selectUserChoice(enMainMenu choice, vector <stClient>& vClient, vector <stUser>& vUser)
 {
 	switch (choice)
 	{
 	case showClient:
-		printClientList(vClient);
+		printClientList(vClient, vUser);
 		break;
 
 	case addNewClient:
-		addClient(vClient);
+		addClient(vClient, vUser);
 		break;
 
 	case deleteClient:
-		markForDeletion(vClient);
+		markForDeletion(vClient, vUser);
 		break;
 
 	case updateClient:
-		updateClientFunc(vClient);
+		updateClientFunc(vClient, vUser);
 		break;
 
 	case findClient:
-		findClientScreen(vClient);
+		findClientScreen(vClient, vUser);
 		break;
 
 	case transactions:
-		printTransactionsScreen(vClient);
+		printTransactionsScreen(vClient, vUser);
 		break;
 
 	case manageUsers:
@@ -878,13 +883,13 @@ void selectUserChoice(enMainMenu choice, vector <stClient>& vClient)
 	}
 }
 
-void startProgram()  //declared above
+void startProgram(vector <stUser>& vUser)  //declared above
 {
 	vector <stClient> vClient = readClientsInFile();
 	printMainMenu();
 	enMainMenu choice = readUserChoice();
 	system("cls");
-	selectUserChoice(choice, vClient);
+	selectUserChoice(choice, vClient, vUser);
 }
 
 int main()
