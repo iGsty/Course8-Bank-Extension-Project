@@ -66,13 +66,13 @@ enum enManageMenu
 };
 
 //decalring some functions.
-void startProgram(vector <stUser>& vUser);
-void selectTransactionMenu(enTransactionMenu choice, vector<stClient>& vClient, vector <stUser>& vUser);
-void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser);
-void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser);
-void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser);
+void startProgram(vector <stUser>& vUser, short permission);
+void selectTransactionMenu(enTransactionMenu choice, vector<stClient>& vClient, vector <stUser>& vUser, short permission);
+void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission);
+void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission);
+void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser, short permission);
 void loginScreen();
-void selectManageChoice(enManageMenu choice, vector <stUser>& vUser);
+void selectManageChoice(enManageMenu choice, vector <stUser>& vUser, short permission);
 
 
 string readAccountNumber()
@@ -336,7 +336,7 @@ bool FoundUser(vector <stUser>& vUser, string username)
 	return false;
 }
 
-void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser)
+void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	string accountNum;
 	stClient client;
@@ -396,18 +396,18 @@ void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser)
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram(vUser);
+		startProgram(vUser, permission);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram(vUser);
+		startProgram(vUser, permission);
 	}
 }
 
-void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser)
+void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	string accountNum;
 	stClient client;
@@ -448,10 +448,10 @@ void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser)
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
 	system("cls");
-	startProgram(vUser);
+	startProgram(vUser, permission);
 }
 
-void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser)
+void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	string accountNum;
 	stClient client;
@@ -524,19 +524,19 @@ void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser)
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram(vUser);
+		startProgram(vUser, permission);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to main menu...";
 		system("pause>0");
 		system("cls");
-		startProgram(vUser);
+		startProgram(vUser, permission);
 	}
 
 }
 
-void printTransactionsScreen(vector <stClient>& vClient, vector <stUser>& vUser)
+void printTransactionsScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	enTransactionMenu menuChoice;
 
@@ -550,31 +550,31 @@ void printTransactionsScreen(vector <stClient>& vClient, vector <stUser>& vUser)
 	cout << "\n===========================================\n";
 
 	menuChoice = readTransactionChoice();
-	selectTransactionMenu(menuChoice, vClient, vUser);
+	selectTransactionMenu(menuChoice, vClient, vUser, permission);
 }
 
-void selectTransactionMenu(enTransactionMenu choice, vector <stClient>& vClient, vector <stUser>& vUser) //declared above
+void selectTransactionMenu(enTransactionMenu choice, vector <stClient>& vClient, vector <stUser>& vUser, short permission) //declared above
 {
 	switch (choice)
 	{
 	case deposit:
 		system("cls");
-		depositScreen(vClient, vUser);
+		depositScreen(vClient, vUser, permission);
 		break;
 
 	case withdraw:
 		system("cls");
-		withdrawScreen(vClient, vUser);
+		withdrawScreen(vClient, vUser, permission);
 		break;
 
 	case totalBalances:
 		system("cls");
-		totalBalance(vClient, vUser);
+		totalBalance(vClient, vUser, permission);
 		break;
 
 	default:
 		system("cls");
-		startProgram(vUser);
+		startProgram(vUser, permission);
 		break;
 	}
 }
@@ -594,7 +594,7 @@ double calculateTotalBalances(vector <stClient>& vClient)
 	return total;
 }
 
-void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser) //declared above
+void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission) //declared above
 {
 	string accountNum;
 	stClient client;
@@ -648,18 +648,18 @@ void depositScreen(vector <stClient>& vClient, vector <stUser>& vUser) //declare
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient, vUser);
+		printTransactionsScreen(vClient, vUser, permission);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient, vUser);
+		printTransactionsScreen(vClient, vUser, permission);
 	}
 }
 
-void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser) //declared above
+void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission) //declared above
 {
 	string accountNum;
 	stClient client;
@@ -721,19 +721,19 @@ void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser) //declar
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient, vUser);
+		printTransactionsScreen(vClient, vUser, permission);
 	}
 	else
 	{
 		cout << "\n\nPress any key to go back to transactions menu...";
 		system("pause>0");
 		system("cls");
-		printTransactionsScreen(vClient, vUser);
+		printTransactionsScreen(vClient, vUser, permission);
 	}
 
 }
 
-void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser) //declared above
+void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser, short permission) //declared above
 {
 	short clientNumber = vClient.size();
 	double total = calculateTotalBalances(vClient);
@@ -754,10 +754,10 @@ void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser) //declared
 	cout << "\n\nPress any key to go back to transactions menu...";
 	system("pause>0");
 	system("cls");
-	printTransactionsScreen(vClient, vUser);
+	printTransactionsScreen(vClient, vUser, permission);
 }
 
-void printManageScreen(vector <stUser> vUser)
+void printManageScreen(vector <stUser> vUser, short permission)
 {
 	cout << "\n===========================================\n";
 	cout << "\tManage Users Screen";
@@ -771,7 +771,7 @@ void printManageScreen(vector <stUser> vUser)
 	cout << "\n===========================================\n";
 	enManageMenu choice = readManageChoice();
 	system("cls");
-	selectManageChoice(choice, vUser);
+	selectManageChoice(choice, vUser, permission);
 }
 
 void printMainMenu()
@@ -792,27 +792,35 @@ void printMainMenu()
 
 }
 
-void printClientList(const vector <stClient>& vClient, vector <stUser>& vUser)
+void printClientList(const vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	short clientNumber = vClient.size();
+	stPermission perm;
 
-	cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
-	cout << "\n___________________________________________________________________________________________\n";
-	for (short i = 0; i < clientNumber; i++)
+	if ((permission & perm.listClients) == perm.listClients)
 	{
-		cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
+		cout << "\n\t\t\t\t Client List (" << clientNumber << ") Client(s).\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		cout << "\n| Account Number | Pin Code\t| Client Name\t\t\t| Phone\t\t| Balance\n";
+		cout << "\n___________________________________________________________________________________________\n";
+		for (short i = 0; i < clientNumber; i++)
+		{
+			cout << "\n| " << vClient[i].accountNumber << "\t\t | " << vClient[i].pinCode << "\t\t| " << left << setw(20) << vClient[i].name << "\t\t| " << vClient[i].phone << "\t| " << fixed << vClient[i].accountBalance;
+		}
+		cout << "\n___________________________________________________________________________________________\n";
 	}
-	cout << "\n___________________________________________________________________________________________\n";
+	else
+	{
+		cout << "\n\nAccess Denied";
+	}
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
 	system("cls");
-	startProgram(vUser);
+	startProgram(vUser, permission);
 
 }
 
-void printListUsers(vector <stUser>& vUser)
+void printListUsers(vector <stUser>& vUser, short permission)
 {
 	short usersNumber = vUser.size();
 
@@ -828,10 +836,10 @@ void printListUsers(vector <stUser>& vUser)
 	cout << "\n\nPress any key to go back to manage users menu...";
 	system("pause>0");
 	system("cls");
-	printManageScreen(vUser);
+	printManageScreen(vUser, permission);
 }
 
-void addClient(vector <stClient>& vClient, vector <stUser>& vUser)
+void addClient(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	stClient client;
 	string num;
@@ -877,10 +885,10 @@ void addClient(vector <stClient>& vClient, vector <stUser>& vUser)
 	cout << "\n\nPress any key to go back to main menu...";
 	system("pause>0");
 	system("cls");
-	startProgram(vUser);
+	startProgram(vUser, permission);
 }
 
-void addUserScreen(vector <stUser>& vUser)
+void addUserScreen(vector <stUser>& vUser, short permission)
 {
 	stUser user;
 	stPermission perm;
@@ -985,7 +993,7 @@ void addUserScreen(vector <stUser>& vUser)
 	cout << "\n\nPress any key to go back to manage users menu...";
 	system("pause>0");
 	system("cls");
-	printManageScreen(vUser);
+	printManageScreen(vUser, permission);
 }
 
 void backToLoginScreen()
@@ -998,6 +1006,7 @@ void loginScreen() //declared above
 {
 	vector <stUser> vUser = readUsersInFIle();
 	string username, password;
+	short permission = 0;
 	bool found = false;
 
 	cout << "\n-----------------------------------";
@@ -1015,6 +1024,7 @@ void loginScreen() //declared above
 		if (vUser[i].username == username && vUser[i].password == password)
 		{
 			found = true;
+			permission = vUser[i].permission;
 			break;
 		}
 	}
@@ -1035,6 +1045,7 @@ void loginScreen() //declared above
 				if (vUser[i].username == username && vUser[i].password == password)
 				{
 					found = true;
+					permission = vUser[i].permission;
 					break;
 				}
 			}
@@ -1045,20 +1056,20 @@ void loginScreen() //declared above
 	if (found)
 	{
 		system("cls");
-		startProgram(vUser);
+		startProgram(vUser, permission);
 	}
 }
 
-void selectManageChoice(enManageMenu choice, vector <stUser>& vUser)
+void selectManageChoice(enManageMenu choice, vector <stUser>& vUser, short permission)
 {
 	switch (choice)
 	{
 	case listUsers:
-		printListUsers(vUser);
+		printListUsers(vUser, permission);
 		break;
 
 	case addUser:
-		addUserScreen(vUser);
+		addUserScreen(vUser, permission);
 		break;
 
 	case deleteUser:
@@ -1074,41 +1085,41 @@ void selectManageChoice(enManageMenu choice, vector <stUser>& vUser)
 		break;
 
 	default:
-		startProgram(vUser);
+		startProgram(vUser, permission);
 		break;
 	}
 }
 
-void selectUserChoice(enMainMenu choice, vector <stClient>& vClient, vector <stUser>& vUser)
+void selectUserChoice(enMainMenu choice, vector <stClient>& vClient, vector <stUser>& vUser, short permission)
 {
 	switch (choice)
 	{
 	case showClient:
-		printClientList(vClient, vUser);
+		printClientList(vClient, vUser, permission);
 		break;
 
 	case addNewClient:
-		addClient(vClient, vUser);
+		addClient(vClient, vUser, permission);
 		break;
 
 	case deleteClient:
-		markForDeletion(vClient, vUser);
+		markForDeletion(vClient, vUser, permission);
 		break;
 
 	case updateClient:
-		updateClientFunc(vClient, vUser);
+		updateClientFunc(vClient, vUser, permission);
 		break;
 
 	case findClient:
-		findClientScreen(vClient, vUser);
+		findClientScreen(vClient, vUser, permission);
 		break;
 
 	case transactions:
-		printTransactionsScreen(vClient, vUser);
+		printTransactionsScreen(vClient, vUser, permission);
 		break;
 
 	case manageUsers:
-		printManageScreen(vUser);
+		printManageScreen(vUser, permission);
 		break;
 
 	default:
@@ -1117,13 +1128,13 @@ void selectUserChoice(enMainMenu choice, vector <stClient>& vClient, vector <stU
 	}
 }
 
-void startProgram(vector <stUser>& vUser)  //declared above
+void startProgram(vector <stUser>& vUser, short permission)  //declared above
 {
 	vector <stClient> vClient = readClientsInFile();
 	printMainMenu();
 	enMainMenu choice = readUserChoice();
 	system("cls");
-	selectUserChoice(choice, vClient, vUser);
+	selectUserChoice(choice, vClient, vUser, permission);
 }
 
 int main()
