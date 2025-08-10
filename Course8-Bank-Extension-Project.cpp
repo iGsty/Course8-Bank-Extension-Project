@@ -1401,8 +1401,12 @@ void loginScreen() //declared above
 	{
 		do
 		{
+			system("cls");
+			cout << "\n-----------------------------------";
+			cout << "\n\tLogin Screen";
+			cout << "\n-----------------------------------\n";
 			cout << "\nInvalid Username\\Password!";
-			cout << "\nEnter Username: ";
+			cout << "\n\nEnter Username: ";
 			getline(cin >> ws, username);
 
 			cout << "\nEnter Password: ";
