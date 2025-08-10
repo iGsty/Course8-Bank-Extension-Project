@@ -450,7 +450,7 @@ void deleteUserScreen(vector <stUser>& vUser, short permission)
 	stUser user;
 
 	cout << "\n-----------------------------------";
-	cout << "\n\tDelete Users Screen";
+	cout << "\n\tDelete User Screen";
 	cout << "\n-----------------------------------\n";
 	cout << "\nPlease enter username: ";
 	getline(cin >> ws, username);
@@ -574,6 +574,43 @@ void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser, short 
 		system("pause>0");
 		system("cls");
 		startProgram(vUser, permission);
+	}
+}
+
+void findUserScreen(vector <stUser>& vUser, short permission)
+{
+	stPermission perm;
+
+	string username;
+	stUser user;
+
+	cout << "\n-----------------------------------";
+	cout << "\n\tFind User Screen";
+	cout << "\n-----------------------------------\n";
+	cout << "\nPlease enter username: ";
+	getline(cin >> ws, username);
+
+	if (!FoundUser(vUser, username))
+	{
+		cout << "\n\nUser with username (" << username << ") is Not found!";
+		cout << "\n\nPress any key to go back to manage menu...";
+		system("pause>0");
+		system("cls");
+		printManageScreen(vUser, permission);
+	}
+	else
+	{
+		user = getUser(vUser, username);
+		cout << "\n\nThe following are the user details:";
+		cout << "\n-----------------------------------\n";
+		cout << left << setw(15) << "Username" << ": " << user.username << endl;
+		cout << left << setw(15) << "Password" << ": " << user.password << endl;
+		cout << left << setw(15) << "Permissions" << ": " << to_string(user.permission);
+		cout << "\n-----------------------------------\n";
+		cout << "\n\nPress any key to go back to manage menu...";
+		system("pause>0");
+		system("cls");
+		printManageScreen(vUser, permission);
 	}
 }
 
@@ -1412,7 +1449,7 @@ void selectManageChoice(enManageMenu choice, vector <stUser>& vUser, short permi
 		break;
 
 	case findUser:
-		// add func
+		findUserScreen(vUser, permission);
 		break;
 
 	default:
