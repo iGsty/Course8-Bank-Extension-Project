@@ -21,6 +21,7 @@ struct stUser
 {
 	string username, password;
 	short permission = 0;
+	bool markDeleteUser = false;
 };
 
 struct stPermission
@@ -73,6 +74,7 @@ void withdrawScreen(vector <stClient>& vClient, vector <stUser>& vUser, short pe
 void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser, short permission);
 void loginScreen();
 void selectManageChoice(enManageMenu choice, vector <stUser>& vUser, short permission);
+void printManageScreen(vector <stUser> vUser, short permission);
 
 
 string readAccountNumber()
@@ -291,8 +293,11 @@ void writeUsersInFile(vector <stUser>& vUser)
 
 		for (stUser& u : vUser)
 		{
-			line = convertUserToLine(u);
-			myFile << line << endl;
+			if (u.markDeleteUser == false)
+			{
+				line = convertUserToLine(u);
+				myFile << line << endl;
+			}
 		}
 
 		myFile.close();
@@ -310,6 +315,19 @@ stClient getClient(vector <stClient>& vClient, string accountNum)
 	}
 
 	return client;
+}
+
+stUser getUser(vector <stUser>& vUser, string username)
+{
+	stUser user;
+
+	for (stUser& u : vUser)
+	{
+		if (u.username == username)
+			user = u;
+	}
+
+	return user;
 }
 
 bool FoundClient(vector <stClient>& vClient, string accountNum)
@@ -392,6 +410,7 @@ void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser, short p
 				if (c.accountNumber == accountNum)
 				{
 					c.markForDelete = true;
+					break;
 				}
 			}
 			writeClientsInFile(vClient);
@@ -420,6 +439,96 @@ void markForDeletion(vector <stClient>& vClient, vector <stUser>& vUser, short p
 		system("pause>0");
 		system("cls");
 		startProgram(vUser, permission);
+	}
+}
+
+void deleteUserScreen(vector <stUser>& vUser, short permission)
+{
+	stPermission perm;
+
+	if ((permission & perm.deleteClient) == perm.deleteClient)
+	{
+		string username;
+		stUser user;
+
+		cout << "\n-----------------------------------";
+		cout << "\n\tDelete Users Screen";
+		cout << "\n-----------------------------------\n";
+		cout << "\nPlease enter username: ";
+		getline(cin >> ws, username);
+
+		if (!FoundUser(vUser, username))
+		{
+			cout << "\n\nUser with username (" << username << ") is Not found!";
+			cout << "\n\nPress any key to go back to manage menu...";
+			system("pause>0");
+			system("cls");
+			printManageScreen(vUser, permission);
+		}
+		else
+		{
+			user = getUser(vUser, username);
+
+			if (user.username != "Admin")
+			{
+				cout << "\n\nThe following are the user details:";
+				cout << "\n-----------------------------------\n";
+				cout << left << setw(15) << "Username" << ": " << user.username << endl;
+				cout << left << setw(15) << "Password" << ": " << user.password << endl;
+				cout << left << setw(15) << "Permissions" << ": " << to_string(user.permission);
+				cout << "\n-----------------------------------\n";
+
+				char deleteUser = 'n';
+				cout << "\n\nAre you sure you want to delete this user? y/n: ";
+				cin >> deleteUser;
+
+				if (tolower(deleteUser) == 'y')
+				{
+					for (stUser& u : vUser)
+					{
+						if (u.username == username)
+						{
+							u.markDeleteUser = true;
+							break;
+						}
+					}
+					writeUsersInFile(vUser);
+					cout << "\n\nUser deleted successfully.";
+					cout << "\n\nPress any key to go back to manage menu...";
+					system("pause>0");
+					system("cls");
+					printManageScreen(vUser, permission);
+				}
+				else
+				{
+					cout << "\n\nUser is NOT deleted.";
+					cout << "\n\nPress any key to go back to manage menu...";
+					system("pause>0");
+					system("cls");
+					printManageScreen(vUser, permission);
+				}
+			}
+			else
+			{
+				cout << "\n\nYou cannot delete this user.";
+				cout << "\n\nPress any key to go back to manage menu...";
+				system("pause>0");
+				system("cls");
+				printManageScreen(vUser, permission);
+			}
+		}
+	}
+	else
+	{
+		cout << "\n-----------------------------------";
+		cout << "\n\nAccess Denied,";
+		cout << "\nYou dont have permission to do this,";
+		cout << "\nPlease contact your admin";
+		cout << "\n-----------------------------------";
+		cout << "\n\nPress any key to go back to manage menu...";
+		system("pause>0");
+		system("cls");
+		printManageScreen(vUser, permission);
 	}
 }
 
@@ -824,6 +933,7 @@ void totalBalance(vector <stClient>& vClient, vector <stUser>& vUser, short perm
 void printManageScreen(vector <stUser> vUser, short permission)
 {
 	stPermission perm;
+	vUser = readUsersInFIle();
 
 	if ((permission & perm.accessManageUsers) == perm.accessManageUsers)
 	{
@@ -1170,7 +1280,7 @@ void selectManageChoice(enManageMenu choice, vector <stUser>& vUser, short permi
 		break;
 
 	case deleteUser:
-		//add func
+		deleteUserScreen(vUser, permission);
 		break;
 
 	case updateUser:
