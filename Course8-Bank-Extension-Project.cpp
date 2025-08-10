@@ -446,90 +446,75 @@ void deleteUserScreen(vector <stUser>& vUser, short permission)
 {
 	stPermission perm;
 
-	if ((permission & perm.deleteClient) == perm.deleteClient)
+	string username;
+	stUser user;
+
+	cout << "\n-----------------------------------";
+	cout << "\n\tDelete Users Screen";
+	cout << "\n-----------------------------------\n";
+	cout << "\nPlease enter username: ";
+	getline(cin >> ws, username);
+
+	if (!FoundUser(vUser, username))
 	{
-		string username;
-		stUser user;
+		cout << "\n\nUser with username (" << username << ") is Not found!";
+		cout << "\n\nPress any key to go back to manage menu...";
+		system("pause>0");
+		system("cls");
+		printManageScreen(vUser, permission);
+	}
+	else
+	{
+		user = getUser(vUser, username);
 
-		cout << "\n-----------------------------------";
-		cout << "\n\tDelete Users Screen";
-		cout << "\n-----------------------------------\n";
-		cout << "\nPlease enter username: ";
-		getline(cin >> ws, username);
-
-		if (!FoundUser(vUser, username))
+		if (user.username != "Admin")
 		{
-			cout << "\n\nUser with username (" << username << ") is Not found!";
-			cout << "\n\nPress any key to go back to manage menu...";
-			system("pause>0");
-			system("cls");
-			printManageScreen(vUser, permission);
-		}
-		else
-		{
-			user = getUser(vUser, username);
+			cout << "\n\nThe following are the user details:";
+			cout << "\n-----------------------------------\n";
+			cout << left << setw(15) << "Username" << ": " << user.username << endl;
+			cout << left << setw(15) << "Password" << ": " << user.password << endl;
+			cout << left << setw(15) << "Permissions" << ": " << to_string(user.permission);
+			cout << "\n-----------------------------------\n";
 
-			if (user.username != "Admin")
+			char deleteUser = 'n';
+			cout << "\n\nAre you sure you want to delete this user? y/n: ";
+			cin >> deleteUser;
+
+			if (tolower(deleteUser) == 'y')
 			{
-				cout << "\n\nThe following are the user details:";
-				cout << "\n-----------------------------------\n";
-				cout << left << setw(15) << "Username" << ": " << user.username << endl;
-				cout << left << setw(15) << "Password" << ": " << user.password << endl;
-				cout << left << setw(15) << "Permissions" << ": " << to_string(user.permission);
-				cout << "\n-----------------------------------\n";
-
-				char deleteUser = 'n';
-				cout << "\n\nAre you sure you want to delete this user? y/n: ";
-				cin >> deleteUser;
-
-				if (tolower(deleteUser) == 'y')
+				for (stUser& u : vUser)
 				{
-					for (stUser& u : vUser)
+					if (u.username == username)
 					{
-						if (u.username == username)
-						{
-							u.markDeleteUser = true;
-							break;
-						}
+						u.markDeleteUser = true;
+						break;
 					}
-					writeUsersInFile(vUser);
-					cout << "\n\nUser deleted successfully.";
-					cout << "\n\nPress any key to go back to manage menu...";
-					system("pause>0");
-					system("cls");
-					printManageScreen(vUser, permission);
 				}
-				else
-				{
-					cout << "\n\nUser is NOT deleted.";
-					cout << "\n\nPress any key to go back to manage menu...";
-					system("pause>0");
-					system("cls");
-					printManageScreen(vUser, permission);
-				}
+				writeUsersInFile(vUser);
+				cout << "\n\nUser deleted successfully.";
+				cout << "\n\nPress any key to go back to manage menu...";
+				system("pause>0");
+				system("cls");
+				printManageScreen(vUser, permission);
 			}
 			else
 			{
-				cout << "\n\nYou cannot delete this user.";
+				cout << "\n\nUser is NOT deleted.";
 				cout << "\n\nPress any key to go back to manage menu...";
 				system("pause>0");
 				system("cls");
 				printManageScreen(vUser, permission);
 			}
 		}
-	}
-	else
-	{
-		cout << "\n-----------------------------------";
-		cout << "\n\nAccess Denied,";
-		cout << "\nYou dont have permission to do this,";
-		cout << "\nPlease contact your admin";
-		cout << "\n-----------------------------------";
-		cout << "\n\nPress any key to go back to manage menu...";
-		system("pause>0");
-		system("cls");
-		printManageScreen(vUser, permission);
-	}
+		else
+		{
+			cout << "\n\nYou cannot delete this user.";
+			cout << "\n\nPress any key to go back to manage menu...";
+			system("pause>0");
+			system("cls");
+			printManageScreen(vUser, permission);
+		}
+		}
 }
 
 void findClientScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
@@ -691,6 +676,145 @@ void updateClientFunc(vector <stClient>& vClient, vector <stUser>& vUser, short 
 		startProgram(vUser, permission);
 	}
 
+}
+
+void updateUsersFunc(vector <stUser>& vUser, short permission)
+{
+	stUser user;
+	string username, password;
+
+	cout << "\n-----------------------------------";
+	cout << "\n\tUpdate Users Screen";
+	cout << "\n-----------------------------------\n";
+	cout << "\nPlease enter username: ";
+	getline(cin >> ws, username);
+
+	if (!FoundUser(vUser, username))
+	{
+		cout << "\n\nUser with username (" << username << ") is Not found!";
+		cout << "\n\nPress any key to go back to manage menu...";
+		system("pause>0");
+		system("cls");
+		printManageScreen(vUser, permission);
+	}
+	else
+	{
+		user = getUser(vUser, username);
+		stPermission perm;
+
+		cout << "\n\nThe following are the user details:";
+		cout << "\n-----------------------------------\n";
+		cout << left << setw(15) << "Username" << ": " << user.username << endl;
+		cout << left << setw(15) << "Password" << ": " << user.password << endl;
+		cout << left << setw(15) << "Permissions" << ": " << to_string(user.permission);
+		cout << "\n-----------------------------------\n";
+
+		char updateUsers = 'n';
+		cout << "\n\nAre you sure you want to update this user? y/n: ";
+		cin >> updateUsers;
+
+		if (tolower(updateUsers) == 'y')
+		{
+			for (stUser& u : vUser)
+			{
+				if (u.username == username)
+				{
+					cout << "\n\nEnter password: ";
+					cin >> ws >> u.password;
+
+					char fullAccess = 'n';
+					cout << "\n\nDo you want to give full access? y/n: ";
+					cin >> fullAccess;
+
+					if (tolower(fullAccess) == 'y')
+					{
+						u.permission = -1;
+
+						writeUsersInFile(vUser);
+						cout << "\n\nUser Updated Successfully.";
+						cout << "\n\nPress any key to go back to manage menu...";
+						system("pause>0");
+						system("cls");
+						printManageScreen(vUser, permission);
+					}
+					else
+					{
+						u.permission = 0;
+						cout << "\n\nDo you want to give access to: ";
+
+						char clintListPermission = 'n';
+						cout << "\n\nShow Client List? y/n: ";
+						cin >> ws >> clintListPermission;
+
+						if (tolower(clintListPermission) == 'y')
+							u.permission = (u.permission | perm.listClients);
+
+						//---------------------------------------
+						char addClientPermission = 'n';
+						cout << "\n\nAdd New Client? y/n: ";
+						cin >> addClientPermission;
+
+						if (tolower(addClientPermission) == 'y')
+							u.permission = (u.permission | perm.addClient);
+
+						//---------------------------------------
+						char deleteClientPermission = 'n';
+						cout << "\n\nDelete Clients? y/n: ";
+						cin >> deleteClientPermission;
+
+						if (tolower(deleteClientPermission) == 'y')
+							u.permission = (u.permission | perm.deleteClient);
+
+						//---------------------------------------
+						char updateClientPermission = 'n';
+						cout << "\n\nUpdate Clients? y/n: ";
+						cin >> updateClientPermission;
+
+						if (tolower(updateClientPermission) == 'y')
+							u.permission = (u.permission | perm.updateClient);
+
+						//---------------------------------------
+						char findClientPermission = 'n';
+						cout << "\n\nFind Client? y/n: ";
+						cin >> findClientPermission;
+
+						if (tolower(findClientPermission) == 'y')
+							u.permission = (u.permission | perm.findClient);
+
+						//---------------------------------------
+						char transactionsPermission = 'n';
+						cout << "\n\nTransactions? y/n: ";
+						cin >> transactionsPermission;
+
+						if (tolower(transactionsPermission) == 'y')
+							u.permission = (u.permission | perm.doTransactions);
+
+						//---------------------------------------
+						char manageUsersPermission = 'n';
+						cout << "\n\nManage Users? y/n: ";
+						cin >> manageUsersPermission;
+
+						if (tolower(manageUsersPermission) == 'y')
+							u.permission = (u.permission | perm.accessManageUsers);
+
+						writeUsersInFile(vUser);
+						cout << "\n\nUser Updated Successfully.";
+						cout << "\n\nPress any key to go back to manage menu...";
+						system("pause>0");
+						system("cls");
+						printManageScreen(vUser, permission);
+					}
+				}
+			}
+		}
+		else
+		{
+			cout << "\n\nPress any key to go back to manage menu...";
+			system("pause>0");
+			system("cls");
+			printManageScreen(vUser, permission);
+		}
+	}
 }
 
 void printTransactionsScreen(vector <stClient>& vClient, vector <stUser>& vUser, short permission)
@@ -1040,15 +1164,14 @@ void addClient(vector <stClient>& vClient, vector <stUser>& vUser, short permiss
 	string num;
 	stPermission perm;
 
-	cout << "\n-----------------------------------";
-	cout << "\n\tAdd New Clients Screen";
-	cout << "\n-----------------------------------\n";
-
 	char answer = 'n';
 	if ((permission & perm.addClient) == perm.addClient)
 	{
 		do
 		{
+			cout << "\n-----------------------------------";
+			cout << "\n\tAdd New Clients Screen";
+			cout << "\n-----------------------------------\n";
 			cout << "\nAdding New Client:\n";
 			num = readAccountNumber();
 
@@ -1131,6 +1254,7 @@ void addUserScreen(vector <stUser>& vUser, short permission)
 		}
 		else
 		{
+			user.permission = 0;
 			cout << "\n\nDo you want to give access to: ";
 
 			char clintListPermission = 'n';
@@ -1284,7 +1408,7 @@ void selectManageChoice(enManageMenu choice, vector <stUser>& vUser, short permi
 		break;
 
 	case updateUser:
-		// add func
+		updateUsersFunc(vUser, permission);
 		break;
 
 	case findUser:
